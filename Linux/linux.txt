@@ -669,4 +669,41 @@ Here is a commonly used example of the curl command in the DevOps field:
     
     3. Make an HTTP POST request with data like (username, password, data to send to api)
 	 curl -H 'header: value' <url>
+
+tar
+   - tar is used for creating and extracting archive files.
+   - tar command can create compressed or uncompressed archive files, as well as maintain and modify them.
+	Syntax: 
+		tar [options] [archive-file] [file or directory to be archived]
+	     [options]
+		-c : Creates an archive
+		-x : Extracts the archive
+		-v : Displays verbose information
+		-f : Creates an archive with a specified filename
+		-z : Tells the tar command to create a tar file using gzip
 		
+		More options: 
+		-t : Displays or lists files in an archived file
+		-u : Archives and adds to an existing archive file
+		-A : Concatenates the archive files
+		-j : Filters the archive tar file using tbzip
+		-W : Verifies an archive file
+		-r : Updates or adds a file or directory to an already-existing .tar file.
+	example:
+	  1.  Create a tar archive with gzip compression. (-c)
+		tar -czvf <tar_file_name>.tar.gz <files or folder>	
+		ex: tar -czvf jenkins_backup.tar.gz /var/lib/jenkins
+	  2.  Extract a gzip compressed tar archive. (-x)
+		tar -xzvf <tar_file_name>.tar.gz 	
+		ex: tar -xzvf jenkins_backup.tar.gz
+zip 
+  - The zip command is a popular tool used to compress and archive files. 
+  - It is available on most operating systems, including Linux, macOS, and Windows. 
+  - The command allows you to create, view, and extract zip archives. 
+
+	The basic syntax for creating a zip archive is as follows:
+	    1.  Create a zip archive.
+		zip <zip_file_name>.zip <files or folder>
+	    2.  To extract the contents of a zip archive.
+		unzip archive_name.zip
+
