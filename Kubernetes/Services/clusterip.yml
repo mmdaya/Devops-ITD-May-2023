@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service 
+metadata: 
+    name: my-cluster-ip
+spec:
+    type: ClusterIP    
+    selector:
+        app: ip-app
+    ports: 
+      - name: http 
+        port: 30002
+        targetPort: 8080
+        
+        
+        

@@ -1,0 +1,123 @@
+Docker images 
+
+List images - docker images 
+			- docker image ls 
+			It will all the local docker images which are there in the HOST machine. 
+
+Delete image/images - docker rmi <image1>:<tag> <image2>:<tag>
+
+Download/pull an images from docker hub/registry 
+	- docker pull <image_name>:<tag_name>
+	   example: docker pull ubuntu:22.04
+
+	Note: If we wont specify the tag then docker uses the default tag (latest)
+		
+		  docker pull ubuntu (OR) docker pull ubuntu:latest    
+
+
+Docker containers 
+	List running container in docker 
+		- docker ps 
+		- docker conatiner ls 
+
+	List all the containers 
+		- docker ps -a 
+		- docker container ls -a 
+
+	To delete a stoped container 
+		- docker rm <container_id>/<container_name>		
+
+	To delete a running container 
+		To stop gracefully and delete container
+		Way-1:
+		1. Stop the running container 
+			docker stop <container_id>
+
+		2. Then delete the container 
+			docker rm <container_id>
+
+		Way-2 	
+			docker stop <container_id> | xargs -I{} docker rm {}	
+
+		Way-3
+			docker rm $(docker stop <container_id>)	
+
+		To delete container by forcefuly stopping the container 
+			docker rm -f <container_id>		
+
+	To get the list of id of running containers 
+		docker ps -q
+
+	To get the list of id of all the containers 
+		docker ps -aq
+	
+	To stop all running containers 
+		docker stop $(docker ps -q)
+
+	To delete all running container 
+		docker rm $(docker stop $(docker ps -q))
+
+	To forcefuly delete all running containers 
+		docker rm -f $(docker ps -q)	
+
+	To list all stopped/exited containers 	
+		docker ps --filter "status=exited" -q
+
+	To delete all stopped containers 
+		docker container prune 
+
+		Note: to bypass prompt (Y/N) - docker container prune -f 	
+
+Container creation (docker run)
+	docker run -it -d --name <container_name> <image_name>:<tag> <command>
+
+docker inspect 	
+
+Docker images 
+	Custom image 
+		- We use Dockerfile to create custom images by using a base image or stock image or other image 
+		- 
+
+	FROM
+	
+	RUN
+
+	COPY and ADD
+
+	ENV
+
+	ARG
+
+	WORKDIR 
+
+	CMD and ENTRYPOINT
+
+Assignment: 
+	MAINTAINER 
+	How to override Entrypoint command?
+
+
+Docker Volume 
+	Bind mount 
+
+
+docker volume create --driver local --opt type=nfs --opt o=addr=172.31.46.125,rw,nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 --opt device=:/ efs		
+
+
+Docker Networking 
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

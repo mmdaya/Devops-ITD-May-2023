@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ip-app-statefulset
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: ip-app-sfs
+  template:
+    metadata:
+      labels:
+        app: ip-app-sfs
+    spec:
+      containers:
+      - name: ipapp
+        image: harshajain/ip-app:latest
+        ports:
+        - containerPort: 8080
