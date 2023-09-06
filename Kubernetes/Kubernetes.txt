@@ -688,3 +688,104 @@ Kubernetes Volumes
 			- PVs are bound to PVCs, ensuring that the requested storage is allocated to the pod.
 			- After we create pvc, k8s looks for a Persistent Volume which matches the claim with same configuration.
 			- If Persistent Volume is found with same configuration, it binds the claim to the pod as volume.
+
+	3. Storage Classes (Dynamic PV):
+
+		- Dynamic volume provisioning starts with the definition of Storage Classes in Kubernetes.
+		- A Storage Class is a template for creating storage volumes with specific characteristics, such as access mode (e.g., ReadWriteOnce, ReadOnlyMany, ReadWriteMany), storage capacity, and provisioning parameters.
+		- Each Storage Class is associated with a particular storage backend or provider (AWS - EBS, EFS, Azure etc.).
+
+
+		1. Install Container Storage Interface (CSI) 
+			- Container Storage Interface (CSI) is a standard for connecting and managing storage systems from container orchestrators like Kubernetes. 
+			- CSI allows storage providers to develop their own drivers to integrate with Kubernetes, making it easier to use a wide range of storage solutions with Kubernetes.	
+
+			Refer: https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/master/docs/install.md
+
+			kubectl create secret generic aws-secret \
+			    --namespace kube-system \
+			    --from-literal "key_id=${AWS_ACCESS_KEY_ID}" \
+			    --from-literal "access_key=${AWS_SECRET_ACCESS_KEY}"	
+
+			kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.22"  
+	
+	4. ConfigMap and Secret Volumes:
+
+			- ConfigMap and Secret volumes allow you to mount configuration data or secrets as files into a pod.
+			- ConfigMaps are used for storing configuration settings, and Secrets are used for sensitive data like API keys or passwords.
+			- These volumes are typically used when you want to inject configuration or secrets into your containers.
+
+			echo 'password' | tr -d \\n | base64
+
+	5. EmptyDir Volume:
+
+		- An EmptyDir volume is a temporary storage volume that's created when a pod is assigned to a node.
+		- It's useful for sharing files between containers within the same pod or for storing temporary data.
+		- Data stored in an EmptyDir volume is lost when the pod is deleted or rescheduled. If a container in a Pod crashes the emptyDir content is unaffected. Deleting a Pod deletes all its emptyDirs.
+		- Pod with multiple containers can use emptyDir to share files between them.
+
+		  	containers:
+		  	- name: nginx
+		      image: nginx:1.22.1
+		      ports:
+		      - containerPort: 80
+			  volumeMounts:
+		   	  - name: emptydir-volume
+		      	mountPath: "/var/log/nginx"
+
+			volumes:
+			  - name: emptydir-volume
+			    emptyDir: {} 
+
+ConfigMaps and Secrets 
+	- Cofigmaps are k8s objects that allows us to separate and attach configuration data from the image content of the pod.
+	- We attach environment variables to the pod. 
+	- The data is not encrypted by default in configmaps so better to use non-confidential data in configmaps.
+	
+	Create a configmap
+		1. Create a file by name "app.properties"
+			environment=test
+			database_url="192.168.1.1"
+			database_password="adjhfgjladhgalhg"
+			
+		2. Load the single config file 
+			kubectl create configmap <configmap_name> --from-env-file configs/app.properties
+
+		   Load the multiple config files 	
+			kubectl create configmap <configmap_name> --from-env-file configs/
+	
+	Create a secret 
+		- Data by default encrypted by base64 format and we use it for confidential data 
+
+		1. Get values in base64 format 
+			echo -n '<value>' | base64 
+
+		2. Copy the base64 value got from above command and use it in secrets 
+
+			apiVersion: v1
+			kind: Secret
+			metadata: 
+    			    name: my-secret
+			type: Opaque    
+			data:
+   				db_url: cG9zdGdyYXNlLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWw=
+   				db_username: dGVzdF91c2Vy
+   				db_password: cGFzc3dvcmQ= 
+		
+		3. Types of secrets 
+			Opaque					arbitrary user-defined data
+			kubernetes.io/service-account-token	ServiceAccount token
+			kubernetes.io/dockercfg			serialized ~/.dockercfg file
+			kubernetes.io/dockerconfigjson		serialized ~/.docker/config.json file
+			kubernetes.io/basic-auth			credentials for basic authentication
+			kubernetes.io/ssh-auth			credentials for SSH authentication
+			kubernetes.io/tls			data for a TLS client or server
+		
+		4. Using secrets in pod spec
+
+			env: 
+       			   - name: DB_URL
+         		     valueFrom: 
+            		        secretKeyRef: 
+               				name: my-secret
+               				key: db_url
