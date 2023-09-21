@@ -789,3 +789,163 @@ ConfigMaps and Secrets
             		        secretKeyRef: 
                				name: my-secret
                				key: db_url
+
+HPA and VPA
+
+	HPA - Horizontal pod autoscaler
+	- HPA will automatically scales the number pf pod replicas using deployment, replicates, statefulSet based on CPU/memory threshold.
+	- We need metric-server as a source for resource monitor for HPA
+
+	1. Install metric server 
+		kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+	2. Add be command to metric-server deployment file 
+		kubectl edit deployment -n kube-system metrics-server
+	 command:
+        - /metrics-server
+        - --kubelet-insecure-tls
+        - --kubelet-preferred-address-types=InternalIP
+
+	kubectl top nodes 
+	kubectl top pods
+
+	Demo 
+	1. Php - application with ClusterIP service 
+		kubectl apply -f deployment-app.yml
+
+	2. Create a HPA 
+		kubectl apply -f HPA.yml
+		kubectl get hpa 
+
+	3. Put load on the application to see the HPA in action 
+	     kubectl apply -f load-deployment.yml
+
+
+	VPA - Vertical pod autoscaler
+
+JOBS
+
+	restartPolicy: 
+	   - This is a pod option on of job 
+	   - Different policies are 
+		Always 
+		  - This is the default restartPolicy. Containers will always be restarted if they stop and 
+		    even if they have completed successfully.	
+	
+		OnFailure
+		   - only restart the pod if the container process exits with an error.
+		   - If the pod is determined to be unhealthy and restarted by a probe then also pod 
+	             will be restarted.
+		
+		Never 
+		   - Pod are never restated even if the container inside pod exists with error.
+
+	apiVersion: batch/v1
+	kind: Job
+	metadata: 
+	   name: my-job 
+	spec:
+	   schedule: "* * * * *" 
+	   completions: 10
+	   parallelism: 2
+	   activeDeadlineSecond: 20	
+	   template:
+	     metadata: 
+		name: my-busybox	 
+             spec: 
+               containers:
+                 - name: busybox 
+                   image: busy box
+                   command: ["echo","k8s JOBS"]
+	       restartPolicy: Never	  
+	
+
+	Common options 
+	
+	completions: 
+		- This is the number of times the job to run. 
+		- The default value is 1
+		- If, completions is 5 then job will run 5 times means 5 pods.
+	
+	parallelism:
+ 		- This is number of jobs to run parallel.
+		- The default value is 1 
+		- By default JOBS run sequentially so to run jobs parallel we need to use this field.
+		 		
+	activeDeadlineSecond:
+		- This filed defines the execution time of pod.
+		- If pod takes more than this time then pod will be terminated.		
+		   
+	backoffLimit:
+		- The number of pod to be created / limited even after failure.
+		- Due to some reason our pods may fail and it affects the completion of job, where 
+		  our job will be creating pods till it gets succeed which will put a load on the cluster.
+                
+	schedule: (CronJOB)
+	     - To the JOB at a particular time.
+	     - Uses the cron syntax (* * * * *) 	
+
+	apiVersion: batch/v1
+	kind: CronJob
+	metadata: 
+	   name: my-job 
+	spec:
+	  schedule: "* * * * *"
+	  successfulJobsHistoryLimit: 0
+	  failedJobsHistoryLimit: 0        
+	  jobTemplate:
+	     spec:
+	       template:      
+	          metadata: 
+	             name: my-busybox	 
+	          spec:
+	             containers:
+	             - name: busybox 
+	               image: busybox
+	               command: ["sh","-c","sleep 2;"]
+	             restartPolicy: OnFailure
+
+Multi master cluster 	
+	What is the size of the k8s cluster ?
+		- we are manitaining different cluster for different environment
+		- we have one big cluster and environments are maintained through namepsaces
+		- always the count of master nodes should a odd number 
+		- we are using loadbalancer / multiple people are working they may dd the worker nodes 
+		  so I never kept exact count of nodes but on average we have 20 to 25 worker nodes.
+	
+	Why always the number of master nodes is odd number ?
+		- Based on Quoram calculation (n/2+1) we get same quoram failure rate for odd number 
+		  and its next even number of nodes, so it is better to use odd number nodes instead 
+		  of even number and we start with minimum 3 master nodes.
+		- Always tell odd number of nodes (any odd number starting with 3, 5, 7, 9)
+		- Based on the quorum value we choose only odd number of nodes starting with 3 to 
+		  achive better fault tollerance cluster.
+
+
+Common errors 
+	ImagePullBackOff or ErrImagePull
+		- Docker registry is not accessible 
+		- Docker image image name or tag is incorrect / It may not exists in the registry 
+
+	RunContainerError 
+	    - ConfigMap/secrets are missing 
+	    - volumes are not accessible/available 	
+
+	CrashLoopBackOff
+	    - This error usually comes when probe fails.
+	    - When the application inside the container is crashing due to some error (Exit 1).
+	    - Error while creating or executing docker image (error in docker image only)
+
+	OOM - OOMKilled, OOMCatch(Out of Memory)     
+		- When pod is requesting resources above its request and limits which are applied.
+		- Memory LEaks in the application only 
+		- In long run containers will start consuming more memory.
+		- Increased traffic or an increase in resource-intensive jobs/workloads 
+		- more unwanted replicas of pods 
+
+10 Most Common Reasons Kubernetes Deployments
+	https://www.kukulinski.com/10-most-common-reasons-kubernetes-deployments-fail-part-1/
+
+helm
+	- Helm uses default kubernetes config $HOME/.kube/config
+    

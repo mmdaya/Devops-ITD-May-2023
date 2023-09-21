@@ -1,0 +1,18 @@
+myname: ' harsha jain '
+
+name: root_name
+
+use_image: custom
+
+mycontainer1:
+    name: jenkins 
+    image: jenkins/jenkins:lts
+    containerPort:
+      - 8080
+      - 50000
+
+mycontainer2:
+    name: ip-app
+    image: harshajain/ip_app:2
+    containerPort: 
+      - 80

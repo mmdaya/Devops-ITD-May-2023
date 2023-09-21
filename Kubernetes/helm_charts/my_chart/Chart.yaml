@@ -1,0 +1,9 @@
+#mandatory 
+apiVersion: v2
+#mandatory  
+name: my_chart
+description: A Helm chart for Kubernetes
+type: application
+#mandatory 
+version: 0.1.0
+appVersion: "1.16.0"

@@ -1,0 +1,7 @@
+spec:
+  containers:
+  {{- if eq .Values.use_image "jenkins" -}}
+  {{- include "test.container1" . }}
+  {{- else if eq .Values.use_image "custom" -}}
+  {{- include "test.container2" . }}
+  {{- end }}
