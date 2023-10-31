@@ -949,3 +949,53 @@ Common errors
 helm
 	- Helm uses default kubernetes config $HOME/.kube/config
     
+Ingress
+	Cloud loadbalancer are costly as most of the times billing will be per requests so 
+	to avoid this the kubernetes solution is Ingress, we can run an external software based 
+	load balancer in our cluster.
+		
+	1. Ingress controller 
+		- This controller is used to execute the ingress resources which contains 
+		  routing rules and brings the external traffic based on routing rules to the 
+		  internal service.	
+	    - This controller will automatically monitors the exiting resources and also 
+		  identifies new ingress resources.
+		- This will be a third party controllers (tools) which we need to install it 
+          for one time in our cluster as controller.
+		- We are using nginx as ingress controller.
+
+	2. Ingress resources 
+		- In k8s Ingress resource is type of object which is used to define routing rules 
+		  based on path of incoming traffic to internal cluster service.
+		- api for ingress resource networking.k8s.io/v1 	
+		- Ingress can be used for revers proxy means to expose multiple services under same IP.
+		- Ingress can be used to delete ssl/tls certificates.
+
+	1. ingress controller (one time setup)
+		1. install helm 
+			https://helm.sh/docs/intro/install/
+		
+		2. Install nginx ingress controller with helm
+			helm install my-release oci://ghcr.io/nginxinc/charts/nginx-ingress --version 1.0.0 --set controller.kind=daemonset --set rbac.create=true
+
+		3. Copy ingress LoadBalancer service ip address
+			 kubectl get svc
+
+		3. Create a mapping of some hostname to ingress controller LB - IP
+			sudo vi /etc/hosts
+			add <lb-ip> app.example.com
+
+		4. Create pods and related service using ingress/deployment.yml 
+				kubectl apply -f deployment.yml 
+
+		4. create ruouting rule by applying ingress resource also know as Ingress 
+			use ingress.yml
+				kubectl apply -f ingress.yml
+
+		5.  curl app.example.com - To get ip address of pod 
+			curl app.example.com/name - To get name defined in app
+
+	2. ingress resource (ingress)		
+		kubectl install ingress.yml
+
+

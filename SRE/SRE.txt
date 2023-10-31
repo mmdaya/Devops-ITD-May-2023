@@ -1,0 +1,148 @@
+
+Availability: Refers to the ability of a system to be accessible and operational, typically measured as a percentage of uptime.
+
+Reliability: The measure of how consistently a system performs its intended function without failure or downtime.
+
+Scalability: The ability of a system to handle increasing workloads by adding resources or making changes to accommodate growth.
+
+
+Incident Management: The process of identifying, responding to, and resolving incidents that impact the availability or performance of a system.
+
+Error Budget: A concept in SRE that quantifies the acceptable amount of downtime or errors within a specified timeframe. It helps balance reliability and innovation.
+
+Monitoring: The practice of observing and measuring the behavior and performance of a system to detect anomalies, troubleshoot issues, and ensure proper functioning.
+
+Alerting: The mechanism by which SRE teams are notified when a system exceeds predefined thresholds or encounters critical issues.
+
+Capacity Planning: The process of determining the resources and infrastructure required to support current and future workloads to maintain system performance and reliability.
+
+Change Management: The practice of controlling and tracking changes to a system, including software deployments, infrastructure modifications, and configuration updates, to minimize risks and ensure stability.
+
+Incident Response: The coordinated effort to address and resolve incidents promptly, minimize their impact, and restore normal system operations.
+
+Post-Incident Analysis: The review and analysis of incidents to identify root causes, recommend preventive measures, and improve system reliability.
+
+Automation: The use of tools and scripts to automate manual and repetitive tasks, reducing human error and improving efficiency.
+
+Performance Optimization: The process of identifying and addressing performance bottlenecks and inefficiencies to enhance the speed and responsiveness of a system.
+
+Disaster Recovery: The set of procedures and measures to recover and restore a system in the event of a major outage, natural disaster, or catastrophic failure.
+
+High Availability (HA): A design principle that aims to minimize system downtime by implementing redundancy, fault tolerance, and failover mechanisms.
+
+Load Balancing: The distribution of incoming network traffic across multiple servers or resources to optimize resource utilization and ensure high availability.
+
+DevOps: A software development methodology that emphasizes collaboration and integration between development and operations teams to improve the efficiency and quality of software delivery.
+
+Infrastructure as Code (IaC): The practice of managing and provisioning infrastructure resources using machine-readable configuration files or scripts, enabling automation and reproducibility.
+
+Service Level Agreement (SLA): A formal agreement between service providers and customers that outlines the level of service expected, including metrics such as uptime, response time, and support availability.
+
+Service-Level Objective (SLO): A measurable target for a specific aspect of a service, such as response time or availability, used to define service quality and guide engineering efforts.
+
+Service Level Indicator (SLI): An SLI is a specific metric or measurement used to quantify the performance or reliability of a service. SLIs are used to track the actual performance of a service and are often used as input for defining SLOs.
+
+Error Budget: An error budget is the allowable amount of downtime or errors that a service can have while still meeting its SLO. It's calculated by subtracting the actual error rate or downtime from 100%. Error budgets are used to determine when it's acceptable to slow down development in favor of improving reliability.
+
+Toil: Toil refers to repetitive and manual operational tasks that are necessary to keep a service running but do not provide long-term value. SRE aims to reduce toil through automation and other means to free up engineers for more strategic work.
+
+Incident: An incident is an unplanned event or outage that affects the reliability of a service. SREs respond to incidents and work to resolve them quickly while minimizing customer impact.
+
+Blameless Post-Mortem: After an incident, SRE teams conduct blameless post-mortems to analyze what went wrong, why it happened, and how to prevent it in the future. The goal is to focus on learning and improvement rather than assigning blame.
+
+Error Budget Policy: An error budget policy defines how error budgets are managed and spent. It outlines the trade-offs between feature development and reliability improvements based on the current state of the error budget.
+
+Capacity Planning: Capacity planning involves forecasting resource requirements for a service to ensure it can handle expected load and traffic. SREs work on capacity planning to avoid outages due to resource constraints.
+
+Automation: Automation is a key principle in SRE. It involves using scripts, tools, and systems to automate repetitive tasks, making operations more efficient and reducing the risk of human error.
+
+Monitoring and Alerting: SREs use monitoring tools to collect data on system performance and set up alerts to notify them of potential issues. Effective monitoring and alerting are critical for identifying and responding to incidents.
+
+Service Dependency Graph: A service dependency graph is a visual representation of how different services or components in a system depend on each other. It helps SREs understand the complex relationships within a system and identify potential points of failure.
+
+Rollback and Rollforward: These terms refer to the process of reverting to a previous version of a service (rollback) or deploying a new version (rollforward) to address issues or incidents. SREs plan and execute these strategies carefully.
+
+
+
+
+MTTD and MTTR 
+MTTD stands for Mean Time to Detect, and MTTR stands for Mean Time to Recover. These are two important metrics used in incident management and IT service management to measure the efficiency and effectiveness of incident response and resolution processes. Here's a brief explanation of each metric:
+
+Mean Time to Detect (MTTD):
+MTTD measures the average time taken to detect an incident or an issue from the moment it occurs until it is identified or reported. 
+It represents the speed at which an organization becomes aware of a problem or an abnormality in their systems or services. 
+A lower MTTD indicates a more proactive and efficient detection process, allowing for quicker response and mitigation of incidents.
+
+Mean Time to Recover (MTTR):
+MTTR measures the average time taken to recover from an incident or an issue, starting from the moment it is detected until the affected system or service is fully restored and operational. It includes the time spent investigating, diagnosing, and resolving the problem, as well as any additional time required for testing and verification. A lower MTTR indicates faster incident resolution and shorter service disruptions, leading to minimal impact on business operations and customer experience.
+
+Both MTTD and MTTR are crucial metrics for organizations as they reflect the efficiency of incident management processes and the overall resilience of their systems. By continuously monitoring and improving these metrics, organizations can strive for faster detection and recovery, reducing the impact of incidents and ensuring smoother operations.
+
+
+On Call responsibilities to help minimize MTTD and MTTR 
+
+
+
+The Site Reliability Engineering (SRE) process is a set of principles and practices designed to ensure the reliability and availability of software systems and services. While the specific implementation may vary from one organization to another, here is a general overview of the SRE process:
+
+Service Definition:
+
+Define the scope and boundaries of the service.
+Identify service-level objectives (SLOs) that specify the desired level of reliability and performance.
+Error Budget Policy:
+
+Establish an error budget policy that outlines how much downtime or error rate is acceptable for the service within a given timeframe.
+This policy guides decision-making regarding feature development versus reliability improvements.
+Monitoring and Alerting:
+
+Set up monitoring to collect data on various aspects of the service, including latency, error rates, and resource utilization.
+Create alerts based on service-level indicators (SLIs) to detect anomalies and incidents.
+Incident Response:
+
+When an incident occurs, SREs respond quickly to minimize customer impact.
+Follow documented incident response procedures, including escalation paths and communication protocols.
+Aim to resolve the incident as quickly as possible.
+Blameless Post-Mortems:
+
+After an incident is resolved, conduct a blameless post-mortem to analyze what went wrong and why.
+Focus on identifying root causes and systemic issues rather than assigning blame.
+Document action items to prevent similar incidents in the future.
+Automation:
+
+Automate repetitive and manual operational tasks (toil) to reduce the workload on SREs.
+Use automation for provisioning, configuration management, and incident response.
+Capacity Planning:
+
+Continuously monitor resource utilization and plan for capacity scaling as needed to accommodate traffic growth.
+Avoid resource constraints that could lead to outages.
+Change Management:
+
+Implement a robust change management process for deploying new features or changes to the service.
+Conduct code reviews, testing, and canary deployments to minimize the risk of introducing errors.
+Load Testing and Chaos Engineering:
+
+Perform load testing to understand how the service behaves under different levels of load.
+Conduct chaos engineering experiments to proactively identify weaknesses in the system's resilience.
+Documentation:
+
+Maintain thorough documentation of the service architecture, procedures, and operational runbooks.
+Ensure documentation is kept up-to-date.
+On-Call Rotation:
+
+Establish an on-call rotation where SREs take turns being responsible for responding to incidents outside of regular working hours.
+Provide proper training and support for on-call engineers.
+Continuous Improvement:
+
+Use the insights gained from post-mortems and monitoring data to drive continuous improvement.
+Prioritize reliability work based on the error budget policy and customer impact.
+Communication and Collaboration:
+
+Foster a culture of collaboration between development and operations teams.
+Maintain open lines of communication to ensure everyone is aligned on reliability goals.
+Security:
+
+Incorporate security practices into the SRE process to ensure the service is resilient to security threats and vulnerabilities.
+Measuring and Reporting:
+
+Regularly measure and report on SLO attainment and error budget consumption.
+Use these metrics to make data-driven decisions about where to invest in reliability improvements.
